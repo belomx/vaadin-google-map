@@ -6,6 +6,7 @@
 /package.json
 /package-lock.json
 /node_modules
+/.vscode
 webpack.config.js
 webpack.generated.js
 tsconfig.json
@@ -14,6 +15,7 @@ tsconfig.json
 pnpm-lock.yaml
 pnpmfile.js
 types.d.ts
+launch.json
 
 dependency_tree.txt
 

@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.vaadin.addon</groupId>
-    <artifactId>vaadin-paper-input-place</artifactId>
-    <version>1.0.1</version>
+    <artifactId>vaadin-google-map</artifactId>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>paper-input-place component</name>
-    <description>Integration of paper-input-place component for Vaadin 17</description>
+    <name>vaadin-google-map component</name>
+    <description>Integration of google-map component for Vaadin 17</description>
     
     <properties>
         <vaadin.version>17.0.0</vaadin.version>
@@ -111,11 +111,6 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.8.6</version>
         </dependency>
     </dependencies>
 

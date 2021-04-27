@@ -1,2 +1,2 @@
-# vaadin-paper-input-place
-Google API Autocomplete component based on paper-input-place for vaadin 17+
+# vaadin-google-map
+Vaadin Google Map component for vaadin 17+
