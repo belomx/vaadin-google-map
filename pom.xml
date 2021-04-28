@@ -5,10 +5,10 @@
 
     <groupId>org.vaadin.addon</groupId>
     <artifactId>vaadin-google-map</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
-    <name>vaadin-google-map component</name>
+    <name>google-map component</name>
     <description>Integration of google-map component for Vaadin 17</description>
     
     <properties>

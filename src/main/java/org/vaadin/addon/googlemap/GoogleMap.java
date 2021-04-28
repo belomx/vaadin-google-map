@@ -3,17 +3,12 @@ package org.vaadin.addon.googlemap;
 import java.util.Arrays;
 
 import com.vaadin.flow.component.AbstractSinglePropertyField;
-import com.vaadin.flow.component.ComponentEvent;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.DomEvent;
-import com.vaadin.flow.component.EventData;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.HasText;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
-import com.vaadin.flow.shared.Registration;
 
 @Tag("google-map")
 @NpmPackage(value = "@tadevel/polymer-google-map", version = "^3.0.0-pre.6")
@@ -21,18 +16,20 @@ import com.vaadin.flow.shared.Registration;
 public class GoogleMap extends AbstractSinglePropertyField<GoogleMap, String> implements HasStyle, HasText, HasSize {    
     private static final String NOT_SET = "not set";
     private static final long serialVersionUID = 1L;
-    //private static final PropertyDescriptor<String,String> placeJSON = PropertyDescriptors.propertyWithDefault("placeJSON", "not entered");
     private static boolean geoReady = false;
     
     public GoogleMap(String k, GoogleMapMarker... markers) {
         super("value", NOT_SET, false);
-        setKey(k);
-        setFitToMarkers(true);
+        setKey(k);        
+        setMarkers(markers);
+    }
+
+    public void setMarkers(GoogleMapMarker... markers) {
         Arrays.stream(markers).findFirst().ifPresent(firstMarker -> {
             setLatitude (firstMarker.getLatitude());
             setLongitude (firstMarker.getLongitude());
         });
-        setMarkers (markers);
+        setMapMarkers (markers);
     }
 
     public void setZoom (double zoom) {
@@ -55,9 +52,10 @@ public class GoogleMap extends AbstractSinglePropertyField<GoogleMap, String> im
         getElement().setProperty("longitude", longitude);
     }
 
-    public void setMarkers (GoogleMapMarker... markers) {
+    private void setMapMarkers (GoogleMapMarker... markers) {
         String markersInnerHtml = Arrays.stream(markers).map(GoogleMapMarker::toString).reduce(" ", (s1, s2) -> s1+" "+s2);
         getElement().executeJs("this.$.objects.innerHTML = \""+markersInnerHtml+"\"");
+        //getElement().executeJs("this._updateObjects()");
     }
     
     public void setKey(String k)
@@ -104,144 +102,6 @@ public class GoogleMap extends AbstractSinglePropertyField<GoogleMap, String> im
      */
     public void setLanguage(String language) {
         getElement().setProperty("language", language);
-    }
-    
-    public void fillValue(String placeString)
-    {
-        String comm = "this.fillValue($0)";
-        if(geoReady) {
-            getElement().executeJs(comm, placeString);
-        }        
-    }
-    
-    /*
-    public String getPlace()
-    {
-        return placeJSON.get(this);
-    }
-    
-    public void setPlace(String place)
-    {
-        placeJSON.set(this, place);
-    }*/
-    
-    /*
-    public Optional<PlaceResponse> getPlaceResponse () {        
-        if (isPlaceReady()) {
-            String addressJson = getPlace();
-            Gson gsonParser = new GsonBuilder().create();
-            return Optional.of(gsonParser.fromJson(addressJson, PlaceResponse.class));
-        }
-        return Optional.empty();
-    }
-    
-    private boolean isPlaceReady() {
-        String addressJson = getPlace();
-        return addressJson != null && !addressJson.isEmpty() && !NOT_SET.equals(addressJson);
-    }*/
-        
-    @DomEvent("api-loaded")
-    public static class GeoReadyEvent extends ComponentEvent<GoogleMap>
-    {
-        private String value;
-
-        public GeoReadyEvent(GoogleMap source,boolean fromClient,@EventData("event.detail.text") String value)
-        {
-            super(source,fromClient);
-            this.value=value;
-            geoReady=true;
-        }
-        
-        public String getValue() {
-            return value;
-        }
-    }
-    public Registration addGeoReadyEventListener(ComponentEventListener<GeoReadyEvent> listener)
-    {
-        return addListener(GeoReadyEvent.class, listener);
-    }
-    
-    /*
-    @SuppressWarnings("serial")
-    @DomEvent("change-placejson-complete")
-    public static class ChangePlacejsonCompleteEvent extends ComponentEvent<GoogleMap>
-    {
-        private PlaceResponse reponse;
-
-        public ChangePlacejsonCompleteEvent(GoogleMap source,boolean fromClient,@EventData("event.detail.placeJSON") String placeJSON)
-        {
-            super(source,fromClient);
-            source.setPlace(placeJSON);
-            reponse = source.getPlaceResponse().orElse(null);
-        }
-
-        public PlaceResponse getPlace() {
-            return reponse;
-        }
-    }
-    public Registration addChangePlacejsonCompleteEventListener(ComponentEventListener<ChangePlacejsonCompleteEvent> listener)
-    {
-        return addListener(ChangePlacejsonCompleteEvent.class, listener);
-    }*/
-        
-    @DomEvent("input-change")
-    public static class ValueChangeEvent extends ComponentEvent<GoogleMap>
-    {
-        private String value;
-
-        public ValueChangeEvent(GoogleMap source,boolean fromClient,@EventData("event.detail.text") String value)
-        {
-            super(source,fromClient);
-            this.value=value;
-        }
-        
-        public String getValue() {
-            return value;
-        }
-    }
-    public Registration addValueChangeEventListener(ComponentEventListener<ValueChangeEvent> listener)
-    {
-        return addListener(ValueChangeEvent.class, listener);
-    }
-
-    @DomEvent("change-complete")
-    public static class ValueCompleteEvent extends ComponentEvent<GoogleMap>
-    {
-        private String value;
-
-        public ValueCompleteEvent(GoogleMap source,boolean fromClient,@EventData("event.detail.text") String value)
-        {
-            super(source,fromClient);
-            this.value=value;
-        }
-        
-        public String getValue() {
-            return value;
-        }
-    }
-    public Registration addValueCompleteEventListener(ComponentEventListener<ValueCompleteEvent> listener)
-    {
-        return addListener(ValueCompleteEvent.class, listener);
-    }
-
-    @DomEvent("click")
-    public static class ClickEvent extends ComponentEvent<GoogleMap>
-    {
-        private String value;
-
-        public ClickEvent(GoogleMap source,boolean fromClient,@EventData("event.detail.text") String value)
-        {
-            super(source,fromClient);
-            this.value=value;
-        }
-        
-        public String getValue() {
-            return value;
-        }
-    }
-    public Registration addClickEventListener(ComponentEventListener<ClickEvent> listener)
-    {
-        return addListener(ClickEvent.class, listener);
-    }
+    }        
 
 }
