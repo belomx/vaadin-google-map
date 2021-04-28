@@ -54,8 +54,11 @@ public class GoogleMap extends AbstractSinglePropertyField<GoogleMap, String> im
 
     private void setMapMarkers (GoogleMapMarker... markers) {
         String markersInnerHtml = Arrays.stream(markers).map(GoogleMapMarker::toString).reduce(" ", (s1, s2) -> s1+" "+s2);
-        getElement().executeJs("this.$.objects.innerHTML = \""+markersInnerHtml+"\"");
-        //getElement().executeJs("this._updateObjects()");
+        getElement().executeJs("this.$.objects.innerHTML = \""+markersInnerHtml+"\"");        
+    }
+
+    public void updateMarkers () {
+        getElement().executeJs("this._updateObjects()");
     }
     
     public void setKey(String k)
