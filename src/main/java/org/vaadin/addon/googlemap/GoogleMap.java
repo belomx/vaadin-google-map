@@ -16,7 +16,6 @@ import com.vaadin.flow.component.dependency.NpmPackage;
 public class GoogleMap extends AbstractSinglePropertyField<GoogleMap, String> implements HasStyle, HasText, HasSize {    
     private static final String NOT_SET = "not set";
     private static final long serialVersionUID = 1L;
-    private static boolean geoReady = false;
     
     public GoogleMap(String k, GoogleMapMarker... markers) {
         super("value", NOT_SET, false);
@@ -54,11 +53,11 @@ public class GoogleMap extends AbstractSinglePropertyField<GoogleMap, String> im
 
     private void setMapMarkers (GoogleMapMarker... markers) {
         String markersInnerHtml = Arrays.stream(markers).map(GoogleMapMarker::toString).reduce(" ", (s1, s2) -> s1+" "+s2);
-        getElement().executeJs("this.$.objects.innerHTML = \""+markersInnerHtml+"\"");        
+        getElement().executeJs("this.$.objects.innerHTML = \""+markersInnerHtml+"\"").then(Void.class, (v) -> {});;
     }
 
     public void updateMarkers () {
-        getElement().executeJs("this._updateObjects()");
+        getElement().executeJs("this._updateObjects()").then(Void.class, (v) -> {});;
     }
     
     public void setKey(String k)
